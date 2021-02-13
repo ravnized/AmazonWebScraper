@@ -18,7 +18,7 @@ def urlInput():
     array = extractor.extract(r.text)
     arrayDump = simplejson.dumps(array)
     jsonDump = json.loads(arrayDump)
-    nameFile = jsonDump['name']+'.json'
+    nameFile = './products/ '+jsonDump['name']+'.json'
 
     for file in glob.glob(nameFile):
         fileAlreadyExist = True
@@ -39,7 +39,7 @@ def searchProduct():
     name = input('Name of Product: ')
     value = input('What do you want to search?')
     os.chdir(".")
-    for file in glob.glob("*.json"):
+    for file in glob.glob("/products/*.json"):
         print(file)
         data_input = json.loads(file)
         sale_price = 0
