@@ -8,14 +8,7 @@ import requests
 from selectorlib import Extractor
 
 
-argparser = argparse.ArgumentParser(description='Amazon URL Tracker/Scraper')
-argparser.add_argument(
-    '-url', dest='url', action='store_true', help='Insert a url for scraping')
-argparser.add_argument('-search', dest='search', action='store_true',
-                       help='Insert a Name and a keyword to search')
-args = argparser.parse_args()
-
-if args.url:
+def urlInput():
     URL = input('insert a url: ')
     todayDate = date.today()
     extractor = Extractor.from_yaml_file('search.yml')
@@ -27,10 +20,11 @@ if args.url:
     nameFile = 'data' + (todayDate.strftime('%d%m%Y')) + '.json'
     with open(nameFile, 'w') as outfile:
         json.dump(array, outfile, sort_keys=True, indent=4)
-    pass
+        pass
+    return 1
 
 
-if args.search:
+def searchProduct():
     name = input('Name of Product: ')
     value = input('What do you want to search?')
     os.chdir(".")
@@ -47,6 +41,22 @@ if args.search:
                 sale_price += parameter_found
         sale_price = sale_price / i
         print(sale_price)
+        return 1
+
+
+argparser = argparse.ArgumentParser(description='Amazon URL Tracker/Scraper')
+argparser.add_argument(
+    '-url', dest='url', action='store_true', help='Insert a url for scraping')
+argparser.add_argument('-search', dest='search', action='store_true',
+                       help='Insert a Name and a keyword to search')
+args = argparser.parse_args()
+
+if args.url:
+    urlInput()
+
+if args.search:
+    searchProduct()
+
 
 '''
 with open(nameFile) as fileInput:
