@@ -9,8 +9,10 @@ from selectorlib import Extractor
 
 
 argparser = argparse.ArgumentParser(description='Amazon URL Tracker/Scraper')
-argparser.add_argument('-url', dest='url', action='store_true', help='Insert a url for scraping')
-argparser.add_argument('-search', dest='search', action='store_true', help='Insert a Name and a keyword to search')
+argparser.add_argument(
+    '-url', dest='url', action='store_true', help='Insert a url for scraping')
+argparser.add_argument('-search', dest='search', action='store_true',
+                       help='Insert a Name and a keyword to search')
 args = argparser.parse_args()
 
 if args.url:
@@ -50,5 +52,3 @@ if args.search:
 with open(nameFile) as fileInput:
     data = json.load(fileInput)
 '''
-
-
