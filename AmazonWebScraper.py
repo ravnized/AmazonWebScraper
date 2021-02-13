@@ -29,7 +29,9 @@ def urlInput():
             pass
     else:
         with open(nameFile, 'w') as outfile:
+            outfile.write('[\n')
             simplejson.dump(array, outfile, indent=4)
+            outfile.write('\n]')
             pass
 
 
