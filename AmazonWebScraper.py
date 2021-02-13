@@ -1,27 +1,36 @@
 import argparse
 import glob
-import simplejson as json
+import simplejson
 import os
 from datetime import date
-
+import json
 import requests
 from selectorlib import Extractor
 
 
 def urlInput():
     URL = input('insert a url: ')
-    todayDate = date.today()
     extractor = Extractor.from_yaml_file('search.yml')
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'
     headers = {'User-Agent': user_agent}
-
+    fileAlreadyExist = False
     r = requests.get(URL, headers=headers)
     array = extractor.extract(r.text)
-    nameFile = 'data' + (todayDate.strftime('%d%m%Y')) + '.json'
-    with open(nameFile, 'w') as outfile:
-        json.dump(array, outfile, sort_keys=True, indent=4)
-        pass
-    return 1
+    arrayDump = simplejson.dumps(array)
+    jsonDump = json.loads(arrayDump)
+    nameFile = jsonDump['name']+'.json'
+
+    for file in glob.glob(nameFile):
+        fileAlreadyExist = True
+    if(fileAlreadyExist):
+        with open(nameFile, 'a+') as outfile:
+            outfile.write(',')
+            simplejson.dump(array, outfile, indent=4)
+            pass
+    else:
+        with open(nameFile, 'w') as outfile:
+            simplejson.dump(array, outfile, indent=4)
+            pass
 
 
 def searchProduct():
@@ -41,21 +50,29 @@ def searchProduct():
                 sale_price += parameter_found
         sale_price = sale_price / i
         print(sale_price)
-        return 1
 
 
-argparser = argparse.ArgumentParser(description='Amazon URL Tracker/Scraper')
-argparser.add_argument(
-    '-url', dest='url', action='store_true', help='Insert a url for scraping')
-argparser.add_argument('-search', dest='search', action='store_true',
-                       help='Insert a Name and a keyword to search')
-args = argparser.parse_args()
+def main():
+    argparser = argparse.ArgumentParser(
+        description='Amazon URL Tracker/Scraper')
+    argparser.add_argument(
+        '-url', dest='url', action='store_true', help='Insert a url for scraping')
+    argparser.add_argument('-search', dest='search', action='store_true',
+                           help='Insert a Name and a keyword to search')
+    argparser.add_argument('-refresh',  dest='refresh', action='store_true',
+                           help='Insert a time in ms for the refresh of price')
 
-if args.url:
-    urlInput()
+    args = argparser.parse_args()
 
-if args.search:
-    searchProduct()
+    if args.url:
+        urlInput()
+
+    if args.search:
+        searchProduct()
+
+
+if __name__ == "__main__":
+    main()
 
 
 '''
