@@ -1,4 +1,4 @@
 simplejson==3.17.2
-requests==2.25.1
+requests==2.31.0
 selectorlib==0.16.0
 daemonocle==1.1.1
